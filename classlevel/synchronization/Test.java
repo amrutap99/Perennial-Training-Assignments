@@ -20,7 +20,7 @@ public class Test {
 		
 		
 		Professor3 p3 = new Professor3();
-		p3.setName("Professor 2");
+		p3.setName("Professor 3");
 		p3.start();
 	}
 
