@@ -1,8 +1,7 @@
 package edu.rit.multithreading;
 
 /*
-* File created on 28-Jun-2021 11:55:34 pm
-  File name : Customer1.java
+* Problem: Implement synchronized block
   
 */
 
