@@ -1,0 +1,20 @@
+
+1.created dynamic web project
+2.created .html file with form tag
+3.created servlet class in edu.ritindia package with doGet() method
+4.In web.xml file , written - 1.servlet class path in <servlet> element
+							  2.<welcome-file-list> for welcome file (Here welcome file -MyHtml.html)
+							  3.servlet-mapping is /servlet/Hello in <servlet-mapping>
+							 
+						
+						
+						
+Notes:
+1.A welcome file is the file that is invoked automatically by the server
+		By default server looks for the welcome file in following order:
+
+		a.welcome-file-list in web.xml
+		b.index.html
+		c.index.htm
+		d.index.jsp
+		If none of these files are found, server renders 404 error.
