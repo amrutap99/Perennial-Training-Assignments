@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC  
+ "-//Hibernate/Hibernate Mapping DTD 3.0//EN"  
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class name="com.ritindia.tableperconcreteclass.Employee" table="employee">
+		<id name="empId" column="employeeid">
+			<generator class="assigned"></generator>
+
+		</id>
+		<property name="empName" column="employeename"></property>
+		
+		  
+		<union-subclass name="com.ritindia.tableperconcreteclass.RegularEmployee" table="regularemployee">
+			<property name="salary" column="salary"></property>
+		</union-subclass>
+		
+		<union-subclass name="com.ritindia.tableperconcreteclass.ContractEmployee" table="contractemployee">
+			<property name="contractPeriod" column="contractperiod"></property>
+		</union-subclass>
+		
+		<!-- 
+		<joined-subclass name="com.ritindia.tableperconcreteclass.RegularEmployee" table="regularemployee">
+			<key column="empid"></key>
+			<property name="salary" column="salary"></property>
+		</joined-subclass>
+		
+		<joined-subclass name="com.ritindia.tableperconcreteclass.ContractEmployee" table="contractemployee">
+			<key column="empid"></key>
+			<property name="contractPeriod" column="contractperiod"></property>
+		</joined-subclass>-->
+		
+
+	</class>
+
+
+</hibernate-mapping>
