@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<bean id="myBeanA" class="dependencyInjection.A">
+		<constructor-arg ref="myBeanB"></constructor-arg>
+		<property name="b" ref="myBeanB"></property> <!-- see property naming convention in A class -->
+	</bean>
+
+	<bean id="myBeanA1" class="dependencyInjection.A"> <!-- calls default constructor
+	getting that line ="A created with default constructor" after setB() is because of this bean on console
+	Run and check-->
+
+	</bean>
+
+	  <bean id="myBeanA2" class="dependencyInjection.A"
+		scope="prototype">    
+
+	</bean>
+
+	
+
+	<bean id="myBeanB" class="dependencyInjection.B">
+	</bean>
+
+</beans>
