@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Thymeleaf namespace -->
+
+<head>
+<title>Covid-19 Application</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+
+<!-- Latest compiled and minified JavaScript -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+</head>
+
+<body>
+
+	<div class="container">
+
+
+
+
+		<!-- <p th:text="${testName}"></p>-->
+		<h1>Covid-19 Daily Status Application</h1>
+
+		<div class="jumbotron jumbotron-fluid">
+
+				<h1 class="display-4" th:text="${totalCasesReported}"></h1>
+				<p class="lead">Total Cases Reported as Of Today 
+				<span th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}"></span></p>
+				<hr>
+
+
+
+				<p>
+					<span>Total New Cases Reported since Previous Day : </span> <span
+						th:text="${totalNewCases}"></span>
+				</p>
+
+
+		</div>
+
+
+		<div class="container">
+			<table class="table">
+				<tr>
+					<th>Country</th>
+					<th>Total Cases</th>
+					<th>Changes since Last Day</th> <!--Today's new cases increased-->
+
+				</tr>
+				<tr th:each="location : ${coronaStatus}">
+					<td th:text="${location.country}"></td>
+					<td th:text="${location.newTotalCases}">0</td>
+					<td th:text="${location.diffFromPrevDay}">0</td>
+
+				</tr>
+			</table>
+
+		</div>
+
+	</div>
+
+
+</body>
+
+</html>
