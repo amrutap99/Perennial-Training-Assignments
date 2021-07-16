@@ -32,6 +32,7 @@ public class HomeController {
         model.addAttribute("coronaStatus", locationsList);
         model.addAttribute("totalCasesReported", totalCases);
         model.addAttribute("totalNewCases", totalNewCases);
+
         return "home";
     }
 
