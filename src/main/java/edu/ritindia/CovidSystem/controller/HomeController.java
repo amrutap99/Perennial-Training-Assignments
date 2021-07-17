@@ -9,13 +9,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
+/**
+ * This is Controller class
+ * This class maps web requests with given URL
+ */
 @Controller
 public class HomeController {
 
-
+    /**
+     * Autowiring CovidDataService
+     */
     @Autowired
     private CovidDataService coronaService;
 
+    /**
+     * This method provides GetMapping - "http://localhost:3006/"
+     *
+     * @param model
+     * @return view for "home.html" file
+     */
     @GetMapping("/")    //http://localhost:3006/
     public String home(Model model) {
 

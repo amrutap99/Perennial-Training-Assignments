@@ -5,13 +5,17 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+/**
+ * This is main class
+ * Here, used annotations - @EnableScheduling,@EnableJpaRepositories("edu.ritindia")
+ */
 @SpringBootApplication
-@EnableScheduling  
+@EnableScheduling
 @EnableJpaRepositories("edu.ritindia")
 public class CovidSystemApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CovidSystemApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(CovidSystemApplication.class, args);
+    }
 
 }
