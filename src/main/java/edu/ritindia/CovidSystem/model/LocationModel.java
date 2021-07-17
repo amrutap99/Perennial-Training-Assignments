@@ -3,9 +3,6 @@ package edu.ritindia.CovidSystem.model;
 import javax.persistence.*;
 import java.util.Date;
 
-/**
- * This is Entity class
- */
 @Entity
 @Table(name = "location1")
 public class LocationModel {
@@ -27,16 +24,10 @@ public class LocationModel {
     @Column(name = "timestamp")
     private Date timestamp;
 
-    /**
-     * Default Constructor
-     */
     public LocationModel() {
         super();
     }
 
-    /**
-     * Parameterised Constructor
-     */
     public LocationModel(String country, int newTotalCases, int diffFromPrevDay) {
         super();
         this.country = country;
@@ -44,12 +35,8 @@ public class LocationModel {
         this.diffFromPrevDay = diffFromPrevDay;
     }
 
-    /**
-     * This method is used to get current date  for every time browser refreshes to fetch data
-     * Used PrePersist annotation -is a JPA annotation and therefore should work in all compatible persistence frameworks.
-     * It indicates a method that should be invoked on particular entity lifecycle event.
-     */
-
+    //@PrePersist is a JPA annotation and therefore should work in all compatible persistence frameworks.
+    // It indicates a method that should be invoked on particular entity lifecycle event.
     @PrePersist
     private void onCreate() {
         timestamp = new Date();      //inserting current date to db for every time browser refreshes to fetch data
@@ -83,16 +70,10 @@ public class LocationModel {
         return diffFromPrevDay;
     }
 
-
     public void setDiffFromPrevDay(int diffFromPrevDay) {
         this.diffFromPrevDay = diffFromPrevDay;
     }
 
-    /**
-     * This method returns result in String format
-     *
-     * @return
-     */
     @Override
     public String toString() {
         return "LocationModel [country=" + country + ", newTotalCases=" + newTotalCases + "]";
