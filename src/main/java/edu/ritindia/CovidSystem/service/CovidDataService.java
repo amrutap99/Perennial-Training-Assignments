@@ -1,95 +1,80 @@
 package edu.ritindia.CovidSystem.service;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
+import edu.ritindia.CovidSystem.model.LocationModel;
+import edu.ritindia.CovidSystem.repository.LocationRepository;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.resource.HttpResource;
+import org.springframework.web.client.RestTemplate;
 
-import edu.ritindia.CovidSystem.model.LocationModel;
-import edu.ritindia.CovidSystem.repository.LocationRepository;
-import net.bytebuddy.agent.builder.AgentBuilder.LocationStrategy;
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 
-//aim is to get api as soon as application starts
+
+/**
+ * This is Service Class
+ * This class provides service of fetching data from external API
+ */
 @Service
 public class CovidDataService {
 
-	@Autowired
-	LocationRepository repository;
-	
-	private static String dataURL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
-
-	
-	private List<LocationModel> allLocationsStatus = new ArrayList<LocationModel>();  //populating "allLocationsStatus" with newLocations
-	
-	
-	
-	//Creted getter for -allLocationsStatus
-	public List<LocationModel> getAllLocationsStatus() {
-		repository.saveAll(allLocationsStatus);  //save to db
-		return allLocationsStatus;
-	}
+    @Value("${dataURL}")   //this is coming from application.properties file
+    public String siteURL;
+    public List<LocationModel> allLocationsStatus = new ArrayList<LocationModel>();  //populating "allLocationsStatus" with newLocations
+    @Autowired
+    LocationRepository repository;
 
 
+    //Creted getter for -allLocationsStatus
+
+    /**
+     * This method returns all locations corona cases and saves data to database
+     *
+     * @return List of allLocationsStatus
+     */
+    public List<LocationModel> getAllLocationsStatus() {
+        repository.saveAll(allLocationsStatus);  //save to db
+        return allLocationsStatus;
+    }
 
 
-	@PostConstruct      //as soon as class-CovidDataService.java is instantiated,executing this method
-	@Scheduled(cron = "1 * * * * *") //Created Scheduler to run this method for every 1st sec,  Spring created proxy of this method,return type of method should be void
-	public void getData() throws IOException, InterruptedException {
-		
-		List<LocationModel> newLocationStatus = new ArrayList<LocationModel>(); //this new list -because to get latest info each time,previous list get replaced with new list data
+    /**
+     * This method fetches data from external covid api in the form of string
+     * Aim is to get api as soon as application starts,used @PostConstruct
+     *
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    @PostConstruct      //as soon as class-CovidDataService.java is instantiated,executing this method
+    public void getData() throws IOException, InterruptedException {
 
+        List<LocationModel> newLocationStatus = new ArrayList<LocationModel>(); //this new list -because to get latest info each time,previous list get replaced with new list data
 
-		// 1.Created Http client
-		HttpClient client = HttpClient.newHttpClient();
+        RestTemplate restTemplate = new RestTemplate();
+        String result = restTemplate.getForObject(siteURL, String.class);
 
-		// 2.Created Http request
-		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(dataURL)).build();
+        StringReader csvReader = new StringReader(result); //converting String to StringReader,& returns string of .csv,to
 
-		// 3.Created Http response and send synchronous request
+        Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(csvReader);      //"csvReader" is reader object
+        for (CSVRecord record : records) {
+            LocationModel locationStatus = new LocationModel();
+            locationStatus.setCountry(record.get("Country/Region"));
+            locationStatus.setNewTotalCases(Integer.parseInt(record.get(record.size() - 1))); //today's current total cases
 
-		HttpResponse<String> httpResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
-		// above 2nd option is body handler
+            //System.out.println(locationStatus); //this is current status of cases
+            int currentDayCases = Integer.parseInt(record.get(record.size() - 1));
+            int prevDayCases = Integer.parseInt(record.get(record.size() - 2));
 
-		//System.out.println(httpResponse.body());  //returns string of .csv,to
-		
-		
-		
-		StringReader csvReader = new StringReader(httpResponse.body()); //converting String to StringReader
-		
-		Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(csvReader);      //"in" is reader object
-		for (CSVRecord record : records) {
-			LocationModel locationStatus = new LocationModel();
-			locationStatus.setCountry(record.get("Country/Region"));
-			locationStatus.setNewTotalCases(Integer.parseInt( record.get(record.size() - 1))); //today's current total cases
+            locationStatus.setDiffFromPrevDay(currentDayCases - prevDayCases);
+            newLocationStatus.add(locationStatus);
+        }
 
-			//System.out.println(locationStatus); //this is current status of cases
-			
-			
-			int currentDayCases = Integer.parseInt( record.get(record.size() - 1));
-			int prevDayCases = Integer.parseInt( record.get(record.size() - 2));
-
-			locationStatus.setDiffFromPrevDay(currentDayCases-prevDayCases);
-			newLocationStatus.add(locationStatus);
-			
-			
-		    
-		}
-		
-		this.allLocationsStatus = newLocationStatus; //new status is set to all locations status
-		        
-	}
+        this.allLocationsStatus = newLocationStatus; //new status is set to all locations status
+    }
 
 }
