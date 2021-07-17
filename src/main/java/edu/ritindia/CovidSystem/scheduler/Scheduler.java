@@ -17,7 +17,6 @@ public class Scheduler {
 
     @Autowired
     private CovidDataService coronaService;
-
     /**
      * @throws IOException
      * @throws InterruptedException
