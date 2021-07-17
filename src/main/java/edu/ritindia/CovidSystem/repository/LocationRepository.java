@@ -6,5 +6,4 @@ import edu.ritindia.CovidSystem.model.LocationModel;
 
 public interface LocationRepository extends JpaRepository<LocationModel, Long>{
 
-
 }
