@@ -83,7 +83,6 @@ public class LocationModel {
         return diffFromPrevDay;
     }
 
-
     public void setDiffFromPrevDay(int diffFromPrevDay) {
         this.diffFromPrevDay = diffFromPrevDay;
     }
